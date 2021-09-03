@@ -5,4 +5,5 @@ Substrate 进阶课的作业
 ```cargo build --release```
 
 ## Test
-```cargo test -p pallet-poe```
+```cargo test -p pallet-xxx```
+详细指令可进入对应 pallets 查看

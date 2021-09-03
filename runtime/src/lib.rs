@@ -25,7 +25,7 @@ use sp_version::RuntimeVersion;
 
 // A few exports that help ease life for downstream crates.
 pub use frame_support::{
-	construct_runtime, parameter_types,
+	construct_runtime, parameter_types,PalletId,
 	traits::{KeyOwnerProofSystem, Randomness, StorageInfo},
 	weights::{
 		constants::{BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight, WEIGHT_PER_SECOND},
@@ -42,6 +42,9 @@ pub use sp_runtime::{Perbill, Permill};
 
 /// Import the ProofOfExistence pallet.
 pub use pallet_poe;
+
+/// Import the Kitties pallet.
+pub use pallet_kitties;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -61,6 +64,10 @@ pub type Index = u32;
 
 /// A hash of some data used by the chain.
 pub type Hash = sp_core::H256;
+
+/// Index of a kitty on chain
+type KittyIndex = u32;
+
 
 /// Opaque types. These are used by the CLI to instantiate machinery that don't need to know
 /// the specifics of the runtime. They can then be made to be agnostic over specific formats
@@ -269,6 +276,10 @@ impl pallet_sudo::Config for Runtime {
 parameter_types! {
 	pub const ProofMaxLength: usize = 32;
 	pub const ProofMinLength: usize = 4;
+
+    // for kitties pallet
+    pub const BalanceToReserve: Balance = 20;
+    pub const KittiesPalletId: PalletId = PalletId(*b"py/kitty");
 }
 
 /// Configure the pallet-poe in pallets/poe.
@@ -276,6 +287,16 @@ impl pallet_poe::Config for Runtime {
 	type Event = Event;
 	type ProofMaxLength = ProofMaxLength;
 	type ProofMinLength = ProofMinLength;
+}
+
+/// Configure the pallet-poe in pallets/poe.
+impl pallet_kitties::Config for Runtime {
+	type Event = Event;
+    type Randomness = RandomnessCollectiveFlip;
+    type Currency = pallet_balances::Pallet<Runtime>;
+    type KittyIndex = KittyIndex;
+    type BalanceToReserve = BalanceToReserve;
+    type PalletId = KittiesPalletId;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
@@ -295,6 +316,7 @@ construct_runtime!(
 		Sudo: pallet_sudo::{Pallet, Call, Config<T>, Storage, Event<T>},
 		// Include the custom logic from the pallet-poe in the runtime.
 		PoeModule: pallet_poe::{Pallet, Call, Storage, Event<T>},
+        KittiesModule: pallet_kitties::{Pallet, Call, Storage, Event<T>},
 	}
 );
 
