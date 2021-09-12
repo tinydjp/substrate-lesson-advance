@@ -189,6 +189,15 @@ git = 'https://github.com/paritytech/substrate.git'
 tag = 'monthly-2021-08'
 version = '4.0.0-dev'
 
+[dependencies.log]
+default-features = false
+version = "0.4.14"
+
+[dependencies.pallet-ocw]
+default-features = false
+path = '../pallets/ocw'
+version = '3.1.0'
+
 [features]
 default = ['std']
 runtime-benchmarks = [
@@ -208,12 +217,14 @@ std = [
     'frame-support/std',
     'frame-system-rpc-runtime-api/std',
     'frame-system/std',
+    'log/std',
     'pallet-aura/std',
     'pallet-balances/std',
     'pallet-grandpa/std',
     'pallet-randomness-collective-flip/std',
     'pallet-sudo/std',
     'pallet-poe/std',
+    'pallet-ocw/std',
     'pallet-timestamp/std',
     'pallet-transaction-payment-rpc-runtime-api/std',
     'pallet-transaction-payment/std',
