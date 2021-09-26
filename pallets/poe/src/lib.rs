@@ -15,11 +15,14 @@ mod tests;
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
 
+pub mod weights;
+
 #[frame_support::pallet]
 pub mod pallet {
     use frame_support::{dispatch::DispatchResult, pallet_prelude::*};
     use frame_system::pallet_prelude::*;
     pub use super::*;
+    pub use weights::WeightInfo;
 
     /// Configure the pallet by specifying the parameters and types on which it depends.
     #[pallet::config]
@@ -28,6 +31,9 @@ pub mod pallet {
         type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
         type ProofMaxLength: Get<usize>;
         type ProofMinLength: Get<usize>;
+
+        /// Weight information for extrinsics in this pallet.
+		type WeightInfo: WeightInfo;
     }
 
     #[pallet::pallet]
@@ -78,7 +84,7 @@ pub mod pallet {
     #[pallet::call]
     impl<T: Config> Pallet<T> {
         /// create claim for the invoker
-        #[pallet::weight(10_000 + T::DbWeight::get().writes(1))]
+        #[pallet::weight(<T as Config>::WeightInfo::create_claim(proof.len() as u32))]
         pub fn create_claim(origin: OriginFor<T>, proof: Vec<u8>) -> DispatchResult {
             // Check that the extrinsic was signed and get the signer.
             // This function will return an error if the extrinsic is not signed.
