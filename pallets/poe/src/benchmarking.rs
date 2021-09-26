@@ -1,4 +1,7 @@
-//! Benchmarking setup for pallet-template
+//! Benchmarking setup for pallet-poe
+// 本示例用于展示第6课的作业，参照作业要求，本示例使用了第一节课的 poe module 来测试 benchmark.
+// 由于时间所限，暂时只选取了1个方法，即 create_claim。运行图片位于项目的 docs 目录，json 文件位于根目录
+// TODO: 研究 extrinsics 参数如何支持通配符，参考 parity 官方的 tips module 优化 benchmark 的测试用例
 
 use super::*;
 
